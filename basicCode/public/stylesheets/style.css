@@ -6,3 +6,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+nav {
+  padding: 20px 30px 20px 30px !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: white;
+  font-size: larger;
+}
