@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// importing mongoose and the configuration
+var config = require('./config/globals')
+var mongoose = require('mongoose');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -21,6 +25,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+
+
+// connect to the mongodb 
+mongoose
+  .connect(config.db, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+  }) // connect
+  .then((message)=>{
+    console.log("Connection Successful");
+  }) // do something after connecting
+  .catch((err)=>{
+    console.log('Error while connecting: '+ err);
+  }); // catch any errors
+
+  
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
