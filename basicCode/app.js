@@ -8,6 +8,9 @@ var logger = require('morgan');
 var config = require('./config/globals')
 var mongoose = require('mongoose');
 
+var passport = require('passport');
+var session = require('express-session');
+
 var indexRouter = require('./routes/index');
 
 
@@ -22,6 +25,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Congigure passport session cookie
+app.use(session({
+  secret: '2FASampleSummer2023',
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+const User = require('./models/user');
+passport.use(User.createStrategy());
+
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 app.use('/', indexRouter);
 
