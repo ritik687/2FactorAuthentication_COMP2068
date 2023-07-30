@@ -5,12 +5,13 @@ const mongoose = require('mongoose');
 const plm = require('passport-local-mongoose');
 
 
-const schemaDefinition = {
+const schemaObj = {
     username: String,
-    password: String
+    password: String,
+    secretKey: String
 };
 
-const userSchema = new mongoose.Schema(schemaDefinition);
+const userSchema = new mongoose.Schema(schemaObj);
 
 // use plugin() to add functionality to our model 
 //  this will expand the model to offer authentication related functionality 
