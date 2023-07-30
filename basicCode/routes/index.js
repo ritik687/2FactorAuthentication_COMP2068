@@ -61,6 +61,14 @@ router.post('/register', (req, res, next) => {
 });
 
 
+router.get('/registered', (req,res,next)=>{
+  res.render('registered',{
+    title: "Successfully Registered"
+  });
+
+});
+
+
 module.exports  =  router;
 
 
