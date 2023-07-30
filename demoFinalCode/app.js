@@ -12,6 +12,7 @@ var passport = require('passport');
 var session = require('express-session');
 
 var indexRouter = require('./routes/index');
+var authenticationRouter = require('./routes/2FA');
 
 
 var app = express();
@@ -46,6 +47,7 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use('/', indexRouter);
+app.use('/2FA',authenticationRouter);
 
 
 
