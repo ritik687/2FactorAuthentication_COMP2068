@@ -17,10 +17,27 @@
       <li class="nav-item">
         <a class="nav-link" href="/">Home</a>
       </li>
+
+      {{#if user}}
+      <li class="nav-item">
+        <a class="nav-link" href="/">Enable 2FA</a>
+      </li>
+      {{/if}}
      
     </ul>
     <ul class="navbar-nav ml-auto">
+
+      {{#if user}}
       
+      <li class="nav-item ">
+        <a class="nav-link" href="/loggedIn">{{user.username}}</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+
+      {{else}}
       <li class="nav-item ">
         <a class="nav-link" href="/Login">Login</a>
       </li>
@@ -28,6 +45,8 @@
       <li class="nav-item">
         <a class="nav-link" href="/Register">Register</a>
       </li>
+
+      {{/if}}
       
     </ul>
   </nav>
