@@ -99,7 +99,7 @@ router.get('/logout', (req, res, next) => {
 });
 
 
-//get handler to check if the current user is logged in or not and also check if the current use has initialized 2FA and if they are verified
+//get handler to check if the current user is logged in or not and also check if the current user has initialized 2FA and if they are verified
 router.get('/loggedIn', 
 (req, res, next)=>{
   if(req.isAuthenticated()){
