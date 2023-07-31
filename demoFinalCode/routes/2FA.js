@@ -7,7 +7,7 @@ const User = require('../models/user');
 
 // importing  npm module -- npm i  speakeasy
 var speakeasy = require("speakeasy");
-const { token } = require('morgan');
+
 
 
 
@@ -19,26 +19,27 @@ function isUserLoggedIn(req,res,next){
 }
 
 router.get('/', isUserLoggedIn, (req,res,next)=>{
-  
+
         var secretKeyObject = speakeasy.generateSecret({
           name: req.user.username
-      })
+      });
+
+      var otpURL = secretKeyObject.otpauth_url + '&period=30';
       
-      var otpURL = secretKeyObject.otpauth_url;
-      
-      console.log(secretKeyObject);
-      console.log(otpURL);
+      // console.log(secretKeyObject);
+      // console.log(otpURL);
      
 
       var qrImageString = 'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=' + encodeURIComponent(otpURL);
 
-      console.log(encodeURIComponent(otpURL));
+      // console.log(encodeURIComponent(otpURL));
 
       let messages = req.session.messages || [];
       req.session.messages = [];
 
       res.render('2FA/index',{
         Title: 'Google-Authentication',
+        title: 'Google-Authentication',
         user: req.user,
         qrImage: qrImageString,
         secretKey: secretKeyObject.base32,
@@ -51,14 +52,18 @@ router.get('/', isUserLoggedIn, (req,res,next)=>{
 router.post('/', isUserLoggedIn, (req,res,next)=>{
 
   // getting userEnteredCode and key that is base32Secret hidden value from the form
-  let sixDigitGeneratedToken = req.body.code;
+  let sixDigitGeneratedToken = req.body.enteredCode;
   let secretKeyBase32 = req.body.key;
 
-  var isVerifiedSixDigitGeneratedTokenAndSecretKeyBase32= speakeasy.totp.verify({
+  // console.log(sixDigitGeneratedToken +"\n"+ secretKeyBase32);
+
+  let isVerifiedSixDigitGeneratedTokenAndSecretKeyBase32 = speakeasy.totp.verify({
     secret: secretKeyBase32,
     encoding: 'base32',
     token: sixDigitGeneratedToken
-  })
+  });
+
+  // console.log(isVerifiedSixDigitGeneratedTokenAndSecretKeyBase32);
 
 
   if(isVerifiedSixDigitGeneratedTokenAndSecretKeyBase32)
@@ -80,22 +85,72 @@ router.post('/', isUserLoggedIn, (req,res,next)=>{
       }
     });
 
-    req.session.twoFAAuthenticated = true;
+    req.session.twoFAuthenticated = true;
     res.redirect('/loggedIn');
   }
 
   else{
-    req.session.messages = ['Incorrect code or Token, please scan the qr code again and enter the new token or code.'];
+    req.session.messages = ['Incorrect code or token, please scan the qr code again and enter the new token or code.'];
     res.redirect('/2FA/');
   }
   
-
-
-})
-
+});
 
 
 
+
+
+
+router.get('/verify', isUserLoggedIn, (req,res,next)=>{
+
+  let messages = req.session.messages || [];
+      req.session.messages = [];
+
+  
+  res.render('2FA/verify',
+  {
+    Title: "Google-Authentication",
+    title: "Google-Authentication",
+    user: req.user,
+    messages: messages
+  }
+  );
+
+  
+  
+});
+
+
+router.post('/verify', (req, res, next)=>{
+
+  let sixDigitGeneratedToken = req.body.enteredCode;
+  let secretKeyBase32 = req.user.secretKey;
+
+  console.log(sixDigitGeneratedToken+"\n"+ secretKeyBase32);
+
+  let isVerifiedSixDigitGeneratedTokenAndSecretKeyBase32 = speakeasy.totp.verify({
+    secret: secretKeyBase32,
+    encoding: 'base32',
+    token: sixDigitGeneratedToken
+  })
+
+  console.log(isVerifiedSixDigitGeneratedTokenAndSecretKeyBase32)
+
+
+  if(isVerifiedSixDigitGeneratedTokenAndSecretKeyBase32)
+  {
+   req.session.twoFAuthenticated = true;
+   res.redirect('/loggedIn');
+  }
+
+  else{
+    req.session.messages = ['Incorrect code or token, please scan the qr code again and enter the new token or code, as it seems like you deleted your account from the google authenticator app,'];
+    res.redirect('/2FA/verify');
+    
+  }
+
+  
+});
 
 
 module.exports = router;

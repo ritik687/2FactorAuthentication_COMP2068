@@ -7,11 +7,16 @@ var passport = require('passport');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
   res.render('index', { 
-    title: '2-Factor Auth - Home Page',
+    Title: 'Home Page',
+    title: '2-Factor Authentication',
     user: req.user
   });
 });
+
+
+
 /* Routes for the login */
 
 // get handler
@@ -19,7 +24,7 @@ router.get('/login', (req, res, next) => {
   let messages = req.session.messages || [];
   req.session.messages = [];
   res.render('login', {
-    title: 'Login',
+    Title: 'Login',
     messages: messages,
     // user: req.user
   });
@@ -36,7 +41,7 @@ router.post('/login', passport.authenticate('local', {
 // GET
 router.get('/register', (req, res, next) => {
   res.render('register', {
-    title: 'Register',
+    Title: 'Register',
     //user: req.user
   });
 });
@@ -69,6 +74,7 @@ router.post('/register', (req, res, next) => {
 // get handler for the registered user.
 router.get('/registered', (req,res,next)=>{
   res.render('registered',{
+    Title: 'Registered',
     title: "Successfully Registered"
   });
 
@@ -78,7 +84,8 @@ router.get('/registered', (req,res,next)=>{
 // get handler for the logout user
 router.get('/logout', (req, res, next) => {
   
-
+  
+  
   // log user out
   req.logout(function(err){
     if(err)
@@ -92,18 +99,59 @@ router.get('/logout', (req, res, next) => {
 });
 
 
-//get handler to check if the current user is logged in or not and also check if the current use has initialized 2FA and if they are verified
-router.get('/loggedIn', 
-(req, res, next)=>{
+
+
+
+//get handler to check if the current user is logged in or not and also check if the current use has initialized 2FA and if they are verified.. Making separate isUserLoggedIn function to check if the user is logged in or not.
+
+function isUserLoggedIn(req, res, next)
+{
   if(req.isAuthenticated()){
     return next();
   }
   res.redirect('/login');
-}, 
+}
+
+function isUserTwoFactorAuthenticated(req, res, next)
+{
+if(req.user.secretKey != null)
+{
+
+  if(req.session.twoFAuthenticated){
+    
+    return next();
+    
+  }
+  else{
+    res.redirect('2FA/verify')
+  }
+}
+
+else{
+  return next();
+}
+}
+
+router.get('/loggedIn', isUserLoggedIn, isUserTwoFactorAuthenticated,
 (req, res, next)=>{
+
+ var title = '';
+ var flag;
+ if(req.session.twoFAuthenticated){
+ 
+  title = "Login successful with Two-Factor authentication";
+
+ }
+ else{
+  flag = true;
+  title= "Login Successful but 2-Factor Authentication is not added yet.";
+ }
+
   res.render('loggedIn', {
-    title: 'Login Successful',
-    user: req.user
+    Title: 'Logged-In',
+    title: title,
+    user: req.user,
+    flag: flag
   });
 }
 

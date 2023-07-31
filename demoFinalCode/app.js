@@ -59,7 +59,7 @@ mongoose
     useUnifiedTopology: true
   }) // connect
   .then((message)=>{
-    console.log("Connection Successful");
+    console.log("MonogDb Database Connection Successful");
   }) // do something after connecting
   .catch((err)=>{
     console.log('Error while connecting: '+ err);

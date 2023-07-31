@@ -1,0 +1,19 @@
+<h2 class="alert alert-success">{{title}}</h2>
+
+{{#if messages}}
+<div class="alert alert-danger">
+    {{messages}}
+</div>
+{{/if}}
+
+<form method="post">
+    <fieldset class="form-group">
+        <label for="enteredCode" class="col-2 control-label">Please enter code from your google authenticator app: </label>
+        <input name="enteredCode" id="enteredCode" type="text" required placeholder="6-digit code or token"/>
+    </fieldset>
+    <fieldset class="form-group">
+        <button class="btn btn-info offset-2">Submit</button>
+        <hr>
+        <p>Have you deleted your account from the authenticator app? Click <a href="../2FA/">here to add 2-Factor Authentication again.</a></p>  
+    </fieldset>
+</form>
