@@ -138,12 +138,12 @@ router.get('/loggedIn', isUserLoggedIn, isUserTwoFactorAuthenticated,
  var title = '';
  var flag;
  if(req.session.twoFAuthenticated){
- 
+  flag = true;
   title = "Login successful with Two-Factor authentication";
 
  }
  else{
-  flag = true;
+  flag = false;
   title= "Login Successful but 2-Factor Authentication is not added yet.";
  }
 

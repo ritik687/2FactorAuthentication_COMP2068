@@ -144,7 +144,7 @@ router.post('/verify', (req, res, next)=>{
   }
 
   else{
-    req.session.messages = ['Incorrect code or token, please scan the qr code again and enter the new token or code, as it seems like you deleted your account from the google authenticator app,'];
+    req.session.messages = ['Incorrect code'];
     res.redirect('/2FA/verify');
     
   }
