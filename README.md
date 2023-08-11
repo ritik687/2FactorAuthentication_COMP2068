@@ -7,7 +7,7 @@ Final application that is completely set-up is the demoFinalCode directory in th
 
 ## finalCode: 
 This is final code that is working and implementing the 2FA. 
-You can view the complete video at this link () in order to test 2FA on your own. Hopefully, this will help you out.
+You can view the complete video at this link (https://www.youtube.com/playlist?list=PLlcX_CytElF8Cj8oqN8BazHKLI9jam9Sb) in order to test 2FA on your own. Hopefully, this will help you out.
 
 ## basicCode: 
 The initial structure includes a foundational Express project integrated with Handlebars templating and featuring a straightforward login function. The primary authentication aspect begins with a basic login mechanism. 
